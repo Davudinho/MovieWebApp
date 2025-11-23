@@ -1,10 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}{{ user.name }}s Filme - MovieWebApp{% endblock %}
+
+{% block content %}
+<div class="movies-section">
+    <h1>🎬 {{ user.name }}s Lieblingsfilme</h1>
+    
+    <a href="{{ url_for('index') }}" class="btn btn-back">← Zurück zur Nutzerliste</a>
+
+    <!-- Liste der Filme -->
+    {% if movies %}
+    <div class="movie-grid">
+        {% for movie in movies %}
+        <div class="movie-card">
+            {% if movie.poster_url %}
+            <img src="{{ movie.poster_url }}" alt="{{ movie.name }} Poster" class="movie-poster">
+            {% else %}
+            <div class="movie-poster-placeholder">🎬</div>
+            {% endif %}
+            
+            <div class="movie-info">
+                <h3>{{ movie.name }}</h3>
+                {% if movie.director %}
+                <p><strong>Regisseur:</strong> {{ movie.director }}</p>
+                {% endif %}
+                {% if movie.year %}
+                <p><strong>Jahr:</strong> {{ movie.year }}</p>
+                {% endif %}
+            </div>
+
+            <div class="movie-actions">
+                <!-- Film bearbeiten -->
+                <form action="{{ url_for('update_movie', user_id=user.id, movie_id=movie.id) }}" method="post" class="inline-form">
+                    <input type="text" name="title" placeholder="Neuer Titel" required>
+                    <button type="submit" class="btn btn-edit">✏️ Bearbeiten</button>
+                </form>
+
+                <!-- Film löschen -->
+                <form action="{{ url_for('delete_movie', user_id=user.id, movie_id=movie.id) }}" method="post" class="inline-form">
+                    <button type="submit" class="btn btn-delete" onclick="return confirm('Film wirklich löschen?')">🗑️ Löschen</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="no-movies">Noch keine Filme hinzugefügt.</p>
+    {% endif %}
+
+    <!-- Formular zum Hinzufügen neuer Filme -->
+    <div class="add-movie-section">
+        <h2>➕ Neuen Film hinzufügen</h2>
+        <form action="{{ url_for('add_movie', user_id=user.id) }}" method="post">
+            <input type="text" name="title" placeholder="Filmtitel eingeben" required>
+            <button type="submit" class="btn btn-primary">Film hinzufügen</button>
+        </form>
+        <p class="hint">💡 Tipp: Die Film-Informationen werden automatisch von OMDb abgerufen!</p>
+    </div>
+</div>
+{% endblock %}
