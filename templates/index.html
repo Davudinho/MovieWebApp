@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}Nutzer - MovieWebApp{% endblock %}
+
+{% block content %}
+<div class="users-section">
+    <h1>Nutzer</h1>
+    
+    <!-- Liste der Nutzer -->
+    <ul class="user-list">
+        {% for user in users %}
+        <li class="user-entry"> 
+            <a href="{{ url_for('get_movies', user_id=user.id) }}" class="btn">{{ user.name }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Formular zum Hinzufügen neuer Nutzer -->
+    <div class="add-user-section">
+        <h2>Neuen Nutzer hinzufügen</h2>
+        <form action="{{ url_for('create_user') }}" method="post">
+            <input type="text" name="name" placeholder="Name eingeben" required>
+            <button type="submit" class="btn btn-primary">Nutzer hinzufügen</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
