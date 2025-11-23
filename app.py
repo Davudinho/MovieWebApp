@@ -24,8 +24,14 @@ def home():
     return "Welcome to MoviWeb App!"
 
 
+@app.route('/users')
+def list_users():
+    users = data_manager.get_users()
+    return str(users)  # Temporarily returning users as a string
+
+
 # Hauptprogramm: Datenbank erstellen und Flask-Server starten
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()  # Erstellt alle Tabellen, falls noch nicht vorhanden
+    # with app.app_context():
+    # db.create_all()  # Erstellt alle Tabellen, falls noch nicht vorhanden
     app.run()
